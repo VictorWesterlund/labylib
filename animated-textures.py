@@ -5,12 +5,15 @@ from pathlib import Path
 
 # from labylib import Cape
 
+# Don't forget to reflect in .gitignore if you change this
+name = "animated-textures"
+
 class Config:
 	
-	f = ".animate-config.json"
+	textures = f"./{name}/" # Cosmetic textures path
+	f = f"./{name}/config.json" # JSON Config file
+	default = '{"PHPSESSID": "","cosmetics": {"cape": {"interval": "15","randomOrder": "False"}}}' # Default config
 	pattern = "^[-,a-zA-Z0-9]{1,128}$" # PHPSESSID pattern
-
-	template = '{\n\t"PHPSESSID": "",\n\t"cosmetics": {\n\t\t"cape": {\n\t\t\t"interval": 15,\n\t\t\t"random": false\n\t\t}\n\t}\n}'
 
 	def __init__(self):
 		self.config = None
@@ -38,12 +41,14 @@ class Config:
 		f.write(json.dumps(self.config))
 		f.close()
 
-	# Create config file from template
+	# Create config file from default template
 	def create(self):
 		self.exists = False
 
+		Path(Config.textures).mkdir(parents=True,exist_ok=True)
+
 		f = open(Config.f,"w")
-		f.write(Config.template)
+		f.write(Config.default)
 		f.close()
 
 	# Load the config file from disk into memory
@@ -55,6 +60,7 @@ class Config:
 		f = open(Config.f,"r")
 		self.config = json.load(f)
 		f.close()
+
 		return True
 
 class Main:
@@ -129,17 +135,20 @@ class Main:
 			self.wizard()
 			return
 
-		print("Labylib is running.. (type 'stop' to close Labylib)")
+		# TODO: Attach labylib hook here
 
 	def init(self):
-		print("Labylib 0.0.1")
+		print("Labylib 0.0.1\n")
 
 		if(self.config.exists and len(self.config.config["PHPSESSID"]) > 1):
 			self.start()
 			return
 
+		for cosmetic in self.config.config["cosmetics"]:
+			Path(Config.textures + cosmetic).mkdir(parents=True,exist_ok=True)
+
 		# Prompt if user wants to use guided setup
-		print("-- Welcome to Labylib --\nSince this is your first time here, would you like to walk through the setup process?\n")
+		print("-- Labylib Animated Textures --\nSince this is your first time here, would you like to walk through the setup process?\n")
 		wizard = input("Start guided setup? 'y/n':[y] ")
 		if(wizard == "n"):
 			print(f"A config file '{Config.f}' has been created for you. Run this command again when you're ready")
