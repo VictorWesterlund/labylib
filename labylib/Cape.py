@@ -2,16 +2,16 @@ import requests
 import hashlib
 import time
 
-class BadRequestError(Exception): pass
+class RequestError(Exception): pass
 
-class Cape:
+class Texture:
 
 	endpoint = "https://www.labymod.net/page/php/cape.php"
 
 	def __init__(self,cookie,img):
 		self.validate(cookie,img)
 
-		self.body = "" # Initialize request body
+		self.body = b"" # Initialize request body
 		self.cookies = dict(PHPSESSID = cookie)
 		self.boundary = self.boundary()
 
@@ -32,9 +32,8 @@ class Cape:
 			"Content-Type": "multipart/form-data; boundary=" + self.boundary
 		}
 		
-		self.addFormData("cosmetic","cape")
-		self.addFormData("file",self.bOpen(img))
-		self.closeFormData()
+		self.appendBinaryFormData(b"cosmetic",b"cape")
+		self.appendBinaryFormData(b"file",self.bOpen(img))
 
 	# -----------------------------------
 
@@ -52,46 +51,48 @@ class Cape:
 	# Open and return file binary as string
 	def bOpen(self,file):
 		f = open(file,"rb")
-		content = str(f.read())
+		content = f.read()
 		f.close()
-
-		length = len(content) - 1
-		content = content[2:length]
 
 		return content
 
 	# Append form-data to request body and boundary header
-	def addFormData(self,name,payload):
-		body = contentType = ""
-		eol = "\r\n"
+	def appendBinaryFormData(self,name,payload):
+		body = contentType = b""
+		eol = b"\r\n"
 
-		disposition = f'name="{name}"'
-		if(name == "file"):
-			contentType = "Content-Type: image/png" + eol
+		disposition = b'name="' + name + b'"'
+		if(name == b"file"):
+			contentType = b"Content-Type: image/png" + eol
 			
 			# Use current epoch as filename. It has to be different from last request
-			filename = str(round(time.time())) + ".png" 
-			disposition += f'; filename="{filename}"'
+			filename = str(round(time.time())) + ".png"
+			filename = filename.encode()
+			disposition += b'; filename="' + filename + b'"'
 
-		body += f"--{self.boundary}" + eol # Init data header
-		body += f"Content-Disposition: form-data; {disposition}" + eol
-		body += contentType + eol + eol
+		body += b"--" + self.boundary.encode() + eol # Init data header
+		body += b"Content-Disposition: form-data; " + disposition + eol
+		body += contentType + eol
 		body += payload + eol
 
 		self.body += body
 
 	# Last form-data has been set, add final post width for boundary header
-	def closeFormData(self):
-		self.body += f"--{self.boundary}--\r\n\r\n"
+	def closeBinaryFormData(self):
+		self.body += b"--" + self.boundary.encode() + b"--\r\n\r\n"
 
 	# -----------------------------------
 
 	def update(self):
-		request = requests.post(Cape.endpoint,
+		self.closeBinaryFormData() # Add final boundary header
+
+		request = requests.post(Texture.endpoint,
 			headers = self.headers,
 			cookies = self.cookies,
 			data = self.body
 		)
 
-		if(request.text != "OK"):
-			raise BadRequestError(request.text)
+		# Raise exception if request fails
+		# Use [3:5] to clean up junk chars from reponse body
+		if(str(request.text)[3:5] != "OK"):
+			raise RequestError(str(request.text))
