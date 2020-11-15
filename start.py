@@ -3,7 +3,7 @@ import json
 import importlib
 from pathlib import Path
 
-# from labylib import Cape
+from labylib import Cape
 
 # Don't forget to reflect in .gitignore if you change this
 name = "animated-textures"
