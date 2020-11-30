@@ -1,6 +1,9 @@
 ![Labylib](https://storage.googleapis.com/public.victorwesterlund.com/github/VictorWesterlund/labylib/labylib.png)
 
 ### Cosmetics API for Labymod
+![PyPI](https://img.shields.io/pypi/v/labylib)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/labylib)
+
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/VictorWesterlund/labylib?include_prereleases)
 ![GitHub last commit](https://img.shields.io/github/last-commit/VictorWesterlund/labylib)
 ![Maintenance](https://img.shields.io/maintenance/yes/2021)
@@ -43,7 +46,7 @@ cape_vis.update("show")
 ```
 
 # Advanced Usage
-## Request headers, cookies and body
+### Request headers and cookies:
 Each class instance can be modified before `update()` is called to make changes to the request headers, cookies etc. You can even add additional encoded form data to the request body if necessary.
 
 labylib uses [`Requests`](https://requests.readthedocs.io/en/master/) under the hood and request parameters like headers and cookies can be modified in accordance with `Request`'s conventions.
@@ -55,7 +58,7 @@ cape_vis.headers["foo"] = "bar"
 cape_vis.update("show")
 ```
 
-### To append form data to the request body of an instance:
+### Append form data to the request body of an instance:
 
 **For `x-www-form-urlencoded` requests:** Append form data with the `addEncodedFormData(key,value)` method:
 ```python3
