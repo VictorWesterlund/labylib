@@ -15,61 +15,74 @@ _This program is offered as-is and might stop working at any time_
 
 ## Installation
 1. Download and install [Python 3](https://www.python.org/downloads/) for your architecture.
-2. Clone this repo to your machine, or [download a zip](/VictorWesterlund/labylib/archive/master.zip)
+2. Install the latest version of labylib with [`pip3`](https://pypi.org/project/labylib/)
 ```bash
-$ git clone https://github.com/VictorWesterlund/labylib/
-$ gh repo clone VictorWesterlund/labylib
+$ python3 -m pip install labylib
+```
+*..or if that doesn't work*
+```python
+$ pip3 install labylib
 ```
 
 ## Quickstart
-**1. Import a cosmetics module from `labylib/<cosmetic>`.**
-
-[A list of all modules and classes can be found here](https://github.com/VictorWesterlund/labylib/wiki/Module-reference-sheet)
-```python
-from labylib import Cape
+1. Import a labylib Module from the [list of available modules](https://github.com/VictorWesterlund/labylib/wiki/labylib-Modules).
+```python3
+from labylib import <MODULE>
 ```
-**2. Initialize a module class.**
-
-All labylib classes take a `PHPSESSID` as their first argument.
-
-_Example with `Cape` where a file-path is expected as a second argument:_
-```python
-texture = Cape.Texture("<String PHPSESSID>","<String PATH_TO_PNG>") # labylib = Cape.Texture("772nnas663jkc8ahbb2","/home/VicW/coolCape-2.png")
+2. Each Module comes with a set of classes available to each cosmetic. Pick a class for your Module. (`Visibility`,`Texture` etc.)
+3. Initialize the class by passing it a `PHPSESSID`<br>
+[**Here's what it is and where to find it**](https://github.com/VictorWesterlund/labylib/wiki/Find-your-PHPSESSID)
+```python3
+# Example
+cape_vis = Cape.Visibility(PHPSESSID)
 ```
-
-**3. Submit a cosmetic update**
-```python
-texture.update()
-```
-Python's [Built-in-exceptions](https://docs.python.org/3/library/exceptions.html#exception-hierarchy) are rasied as needed for missing texture files (`FileNotFoundError`) etc. If a request was sucuessfully sent to the Labymod endpoint, but it returned something falsey (not `OK`). A custom-defined `RequestError` exception will be raised; containing the response received from the endpoint.
-```python
-try:
-  texture.update()
-except RequestError as error:
-  print("Caugh RequestError exception:" + error)
-# "Caugh RequestError exception: Session expired."
+4. Call `update()` with a value expected by the class. Just like Modules, the value expected depends on the class.
+```python3
+# Example
+cape_vis.update("show")
 ```
 
-## Advanced usage
-### HTTP POST Headers
-Request headers and cookies can be accessed and modified pre-submission by applying standard list modifications on the followin objects: `self.headers` and `self.cookies`
-```python
-texture = Cape.Texture("<String PHPSESSID>","<String PATH_TO_PNG>")
+# Advanced Usage
+## Request headers, cookies and body
+Each class instance can be modified before `update()` is called to make changes to the request headers, cookies etc. You can even add additional encoded form data to the request body if necessary.
 
-texture.headers["Origin"] = "https://example.com/"
-texture.cookies["Foo"] = "Bar"
+labylib uses [`Requests`](https://requests.readthedocs.io/en/master/) under the hood and request parameters like headers and cookies can be modified in accordance with `Request`'s conventions.
+```python3
+# This will send add a "foo=bar" cookie and header with the request
+cape_vis.cookies["foo"] = "bar"
+cape_vis.headers["foo"] = "bar"
 
-labylib.update()
+cape_vis.update("show")
 ```
-### HTTP POST Body
-Binary form-data can be appended by calling `self.appendBinaryFormData(name,payload)`.
-```python
-texture = Cape.Texture("<String PHPSESSID>","<String PATH_TO_PNG>")
 
-texture.appendBinaryFormData(b"foo",b"bar")
-texture.appendBinaryFormData(b"file","/home/VicW/home/VicW/coolCape-2.png") # Note that 'payload' is a String in this case (as opposed to Binary)
+### To append form data to the request body of an instance:
+
+**For `x-www-form-urlencoded` requests:** Append form data with the `addEncodedFormData(key,value)` method:
+```python3
+# This will add "foo=bar" to the URL encoded payload
+cape_vis.addEncodedFormData("foo","bar")
+cape_vis.update("show")
 ```
-Special form-data types ('names'):
-|name|Description
-|--|--|
-|`'file'`| Submit cosmetic texture file as BLOB by passing `payload` a binary-encoded PNG.<br>_`self.bOpen()` can be used to 'open()' a file as binary string._
+
+**For `multipart/form-data` requests:** Append binary form data with the `addBinaryFormData(key,payload)` method:
+```python3
+# This will create a new payload boundary containing "foo=bar"
+cape_texture.addBinaryFormData(b"foor",b"bar")
+cape_texture.update("show")
+```
+You can also append `image/png` files by passing "file" as the `key` argument. You can either pass binary data directly as a BLOB to `payload` or use `bOpen(<Path_to_PNG>)` to load an image from disk:
+```python3
+# This will create a new payload boundary with a "Content-Type: image/png" header and BLOB body
+cape_texture.addBinaryFormData(b"file",cape_vis.bOpen("~/someImage.png"))
+cape_texture.update("~/myAwesomeTexture.png")
+```
+
+## Contribute
+
+If you find any bugs with- or would like to suggest features to labylib, please submit them under [Issues](https://github.com/VictorWesterlund/labylib/issues)
+
+Pull requests to labylib are highly encouraged!
+
+## License
+
+[GNU General Public License v3.0](https://github.com/VictorWesterlund/labylib/blob/master/LICENSE)
