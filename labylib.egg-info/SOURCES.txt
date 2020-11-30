@@ -1,6 +1,7 @@
 README.md
 setup.py
 labylib/Cape.py
+labylib/Hat.py
 labylib/__init__.py
 labylib.egg-info/PKG-INFO
 labylib.egg-info/SOURCES.txt
