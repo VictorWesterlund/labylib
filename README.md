@@ -8,25 +8,20 @@
 
 Modify LabyMod cosmetics programmatically with Python.
 
-|![VicW](https://crafatar.com/renders/body/53c40674-f0a2-4f95-9ce1-479bdd1d8b67?scale=2) | Created by VicW | 
-|--|--|
+### [Supported cosmetics](https://github.com/VictorWesterlund/labylib/wiki/labylib-Modules)
 
-_labylib or Victor Westerlund is in no way sponsored by or affiliated with LabyMod or LabyMedia GmbH._<br>
-_This program is offered as-is and might stop working at any time_
+_labylib is in no way sponsored by or affiliated with LabyMod or LabyMedia GmbH._<br>
+_This program is offered as-is and might stop working at any time._
 
 ## Installation
-1. Download and install [Python 3](https://www.python.org/downloads/) for your architecture.
-2. Install the latest version of labylib with [`pip3`](https://pypi.org/project/labylib/)
+1. Download and install [Python 3](https://www.python.org/downloads/).
+2. Install the latest version of labylib with [`pip`](https://pypi.org/project/labylib/)
 
 ![PyPI](https://img.shields.io/pypi/v/labylib)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/labylib)
 
 ```bash
 $ python3 -m pip install labylib
-```
-*..or if that doesn't work*
-```python
-$ pip3 install labylib
 ```
 
 ## Quickstart
@@ -86,8 +81,11 @@ cape_texture.update("~/myAwesomeTexture.png")
 
 If you find any bugs with- or would like to suggest features to labylib, please submit them under [Issues](https://github.com/VictorWesterlund/labylib/issues)
 
-Pull requests to labylib are highly encouraged!
-
 ## License
 
 [GNU General Public License v3.0](https://github.com/VictorWesterlund/labylib/blob/master/LICENSE)
+
+----
+
+|![VicW](https://i.imgur.com/XHwOKuS.png) | Created by VicW | 
+|--|--|
