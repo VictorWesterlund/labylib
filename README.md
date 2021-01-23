@@ -1,12 +1,10 @@
 ![Labylib](https://storage.googleapis.com/public.victorwesterlund.com/github/VictorWesterlund/labylib/labylib.png)
 
 ### Cosmetics API for Labymod
-![PyPI](https://img.shields.io/pypi/v/labylib)
-![PyPI - Wheel](https://img.shields.io/pypi/wheel/labylib)
 
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/VictorWesterlund/labylib?include_prereleases)
 ![GitHub last commit](https://img.shields.io/github/last-commit/VictorWesterlund/labylib)
-![Maintenance](https://img.shields.io/maintenance/yes/2021)
+![Maintenance](https://img.shields.io/maintenance/no/2021)
 
 Modify LabyMod cosmetics programmatically with Python.
 
@@ -19,6 +17,10 @@ _This program is offered as-is and might stop working at any time_
 ## Installation
 1. Download and install [Python 3](https://www.python.org/downloads/) for your architecture.
 2. Install the latest version of labylib with [`pip3`](https://pypi.org/project/labylib/)
+
+![PyPI](https://img.shields.io/pypi/v/labylib)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/labylib)
+
 ```bash
 $ python3 -m pip install labylib
 ```
